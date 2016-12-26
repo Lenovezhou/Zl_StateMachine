@@ -30,6 +30,10 @@ namespace HuangDong.Yu
         public float stateTime { get; private set; }
 
         private State _state;
+		/// <summary>
+		/// 父类定义的变量，具有三个Action回调属性Onenter（无参），Onleave（无参），Onupdate（需要float类型参数）
+		/// </summary>
+		/// <value>The state.</value>
         public State state
         {
             //得到当前状态

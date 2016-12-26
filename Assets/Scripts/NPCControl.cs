@@ -30,7 +30,7 @@ namespace HuangDong.Yu
         private int currentWayPoint = 0;
         //brief 跟随路径点移动，如果有多种状态，继续添加
         private State follow = new State();
-        //brief 追着玩家跑，如果有多种状态，继续添加
+        ///brief 追着玩家跑，如果有多种状态，继续添加
         private State chase = new State();
 
         void Start()
@@ -49,7 +49,7 @@ namespace HuangDong.Yu
 
         void Update()
         {
-            //更新状态
+            ///更新状态
             OnUpdateState(Time.deltaTime);
         }
 
@@ -59,23 +59,45 @@ namespace HuangDong.Yu
         /// <param name="obj"></param>
         private void ChaseUpdate(float obj)
         {
-            if (Vector3.Distance(npc.transform.position, player.transform.position) >= 30)
-                state = follow;
-             
+			///如果距离大于30，则为寻路状态，
+            if (Vector3.Distance(npc.transform.position, player.transform.position) >= 10)
+               ///执行follow.update
+				state = follow;
+             ///startchase
             chase.OnEnter(); //开始追逐
         }
 
+
+
+		Ray ray;
         /// <summary>
         /// brief 满足条件，更换状态
         /// </summary>
         /// <param name="obj"></param>
         private void FollowUpdate(float obj)
         {
-            RaycastHit hit;
-            if (Physics.Raycast(npc.transform.position, npc.transform.forward, out hit, 15F))
-                if (hit.transform.gameObject.tag == "Player")
-                    state = chase;
-
+			///如果正前方15内有player则为跟随player状态
+//            RaycastHit hit;
+//            if (Physics.Raycast(npc.transform.position, npc.transform.forward, out hit, 15F))
+//				{
+//                if (hit.transform.gameObject.tag == "Player")
+//					{
+//					state = chase;
+//					}
+//				}
+			//正前方15米处的球形半径内有player则切换为跟随状态
+			ray.origin = npc.transform.position;
+			ray.direction = npc.transform.forward;
+			RaycastHit[] hits = Physics.SphereCastAll (ray, 5f);
+			foreach (var a in hits) 
+			{
+				if (a.collider.CompareTag("Player")) 
+				{
+					///执行chase.Onupdate
+					state = chase;
+				}
+			}
+			///startfollow
             follow.OnEnter(); //开始跟随
         }
 

@@ -19,6 +19,7 @@ namespace HuangDong.Yu
 {
     public class PlayerControl : MonoBehaviour
     {
+		public Camera maincamera;
         void Update()
         {
             float speed = 0.4f;
@@ -27,6 +28,13 @@ namespace HuangDong.Yu
 
             //transform.Translate(h, 0, v);
             Vector3.MoveTowards(transform.position, transform.position += new Vector3(h, 0, -v), Time.deltaTime*speed);
-        }
+			if (maincamera != null)
+			{
+				maincamera.transform.position = Vector3.Lerp(maincamera.transform.position
+					,new Vector3(transform.position.x
+						,maincamera.transform.position.y
+						,transform.position.z),0.25f);
+			}
+		}
     }
 }
